@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntersectionObserver</title>
+    <style>
+        #box1,
+        #box2 {
+            width: 100px;
+            height: 100px;
+            background: blue;
+            color: #fff;
+
+            position: relative;
+        }
+
+        #box1 {
+            top: 500px;
+        }
+
+        #box2 {
+            top: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box1">BOX111</div>
+    <div id="box2">BOX222</div>
+    <script>
+        // 可以看到元素 box1 和 box2 在可视范围达到一半（0.5）和全部（1）的时候分别触发了回调。
+        // 我们在做一些数据采集的时候，希望知道某个元素是否是可见的，什么时候可见的，就可以用这个 api 来监听，还有做图片的懒加载的时候，可以当可视比例达到某个比例再触发加载。
+        const intersectionObserver = new IntersectionObserver(
+            function (entries) {
+                console.log('info:');
+                entries.forEach(item => {
+                    console.log(item.target, item.intersectionRatio)
+                })
+            }, {
+            threshold: [0.5, 1]
+        });
+
+        intersectionObserver.observe(document.querySelector('#box1'));
+        intersectionObserver.observe(document.querySelector('#box2'));
+
+    </script>
+
+</body>
+
+</html>

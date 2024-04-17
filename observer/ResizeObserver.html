@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResizeObserver</title>
+    <style>
+        #box {
+            width: 100px;
+            height: 100px;
+            background: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box"></div>
+    <script>
+        const box = document.querySelector('#box');
+
+        setTimeout(() => {
+            box.style.width = '200px';
+        }, 3000);
+
+        // 用 ResizeObserver 监听它的变化：
+        const resizeObserver = new ResizeObserver(entries => {
+            // 可以拿到元素和它的位置、尺寸
+            console.log('当前大小', entries)
+        });
+        resizeObserver.observe(box);
+
+    </script>
+
+</body>
+
+</html>

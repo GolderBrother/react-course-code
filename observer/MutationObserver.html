@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MutationObserver</title>
+    <style>
+        #box {
+            width: 100px;
+            height: 100px;
+            background: blue;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box"><button>james</button></div>
+    <script>
+        setTimeout(() => {
+            box.style.background = 'red';
+        }, 2000);
+
+        setTimeout(() => {
+            const dom = document.createElement('button');
+            dom.textContent = 'zhang';
+            box.appendChild(dom);
+        }, 3000);
+
+        setTimeout(() => {
+            document.querySelectorAll('button')[0].remove();
+        }, 5000);
+
+        // 创建一个 MutationObserver 对象，监听这个盒子的属性和子节点的变化。
+        const mutationObserver = new MutationObserver((mutationsList) => {
+            console.log(mutationsList)
+        });
+
+        // 这个可以用来做什么呢？比如文章水印被人通过 devtools 去掉了，那么就可以通过 MutationObserver 监听这个变化，然后重新加上，让水印去不掉。
+        mutationObserver.observe(box, {
+            attributes: true,
+            childList: true
+        });
+
+
+    </script>
+</body>
+
+</html>

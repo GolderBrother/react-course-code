@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PerformanceObserver</title>
+</head>
+
+<body>
+    <button onclick="measureClick()">Measure</button>
+
+    <img src="https://p3-passport.byteacctimg.com/img/user-avatar/423647b4ff43e3a91a5ad4674a91f0e2~230x230.awebp" />
+
+    <script>
+        // 创建 PerformanceObserver 对象，监听 mark（时间点）、measure（时间段）、resource（资源加载耗时） 这三种记录时间的行为
+        const performanceObserver = new PerformanceObserver(list => {
+            list.getEntries().forEach(entry => {
+                console.log(entry);// 上报
+            })
+        });
+        performanceObserver.observe({ entryTypes: ['resource', 'mark', 'measure'] });
+
+        // 用 mark 记录了某个时间点
+        performance.mark('registered-observer');
+
+        // 点击 button 的时候用 measure 记录了某个时间段的数据
+        function measureClick() {
+            performance.measure('button clicked');
+        }
+    </script>
+</body>
+
+</html>
