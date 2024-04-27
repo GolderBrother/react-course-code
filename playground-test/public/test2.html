@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>importmap</title>
+</head>
+
+<body>
+    <h2>importmap</h2>
+    <div id="editor"></div>
+    <script type="importmap">
+        {
+            "imports": {
+                "react": "https://esm.sh/react@18.2.0",
+                "react-dom": "https://esm.sh/react-dom@18.3.!",
+                "monaco-editor": "https://esm.sh/monaco-editor@0.48.0"
+                "@monaco-editor/react": "https://esm.sh/@monaco-editor/react@4.6.0",
+            }
+        }
+    </script>
+    <script type="module">
+        import React from 'react';
+        // import ReactDOM from 'react-dom';
+    
+        // import Editor from '@monaco-editor/react';
+        console.log('React', React);
+        // console.log('ReactDOM', ReactDOM);
+        // function App() {
+        //     return <Editor height="90vh" defaultLanguage="javascript" defaultValue="// some comment" />;
+        // }
+
+        // const rootElement = document.getElementById('editor');
+        // ReactDOM.render(<App />, rootElement);
+    </script>
+</body>
+
+</html>
