@@ -1,3 +1,4 @@
+import React from 'react'
 import ReactPlayground from './ReactPlayground/index';
 import './App.scss';
 import { PlaygroundProvider } from './ReactPlayground/PlaygroundProvider';
