@@ -13,9 +13,10 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
     const [selectedFileName, setSelectedFileName] = useState('App.tsx');
     const [theme, setTheme] = useState<Theme>('dark');
     const addFile = (name: string) => {
+        const language = fileName2Language(name);
         files[name] = {
             name,
-            language: '',
+            language,
             value: ''
         };
         setFiles({
@@ -29,15 +30,18 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
         })
     }
     const updateFileName = (oldFieldName: string, newFieldName: string) => {
-        if (!files[oldFieldName] || files[newFieldName] === null || files[newFieldName] === undefined) return;
+        // if (!files[oldFieldName] || files[newFieldName] === null || files[newFieldName] === undefined) return;
+        if (!files[oldFieldName]) return;
         const {
             [oldFieldName]: oldFieldValue,
             ...rest
         } = files;
         const newFile = {
-            ...oldFieldValue,
-            language: fileName2Language(newFieldName),
-            name: newFieldName
+            [newFieldName]: {
+                ...oldFieldValue,
+                language: fileName2Language(newFieldName),
+                name: newFieldName
+            }
         }
         setFiles({
             ...rest,

@@ -28,7 +28,7 @@ export default function CodeEditor() {
   }
   const onEditorChangeDebounce = debounce(onEditorChange, 100)
   const editorOptions = useMemo(() => ({
-    theme: `vs-${theme}` 
+    theme: `vs-${theme}`,
   }), [theme])
   return (
     <div className={styles.codeEditorWrapper}>
