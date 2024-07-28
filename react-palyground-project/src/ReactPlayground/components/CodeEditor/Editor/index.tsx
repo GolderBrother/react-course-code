@@ -27,7 +27,6 @@ export default function Editor(props: EditorProps) {
         // 可以 cmd + j 的时候格式化代码
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyJ, () => {
             editor.getAction('editor.action.formatDocument')?.run()
-
             const actions = editor.getSupportedActions().map((a) => a.id);
             console.log('actions', actions);
         });

@@ -1,13 +1,19 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Preview</title>
-</head>
-<body>
-<script type="importmap"></script>
-<script type="module" id="appSrc"></script>
-<div id="root"></div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preview</title>
+  </head>
+  <body>
+    <script type="importmap"></script>
+    <script type="module" id="appSrc"></script>
+    <div id="root"></div>
+    <script>
+      // iframe 里监听 error 事件，发生错误的时候通过 postMessage 传递给父窗口
+      window.addEventListener("error", (e) => {
+        window.parent.postMessage({ type: "ERROR", message: e.message });
+      });
+    </script>
+  </body>
 </html>

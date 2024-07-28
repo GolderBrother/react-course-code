@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import styles from './index.module.scss';
 import FileNameList from './FileNameList';
 import Editor from './Editor';
@@ -8,6 +8,7 @@ import { debounce } from 'lodash-es';
 export default function CodeEditor() {
   const {
     files,
+    theme,
     setFiles,
     selectedFileName,
     setSelectedFileName
@@ -26,10 +27,13 @@ export default function CodeEditor() {
     });
   }
   const onEditorChangeDebounce = debounce(onEditorChange, 100)
+  const editorOptions = useMemo(() => ({
+    theme: `vs-${theme}` 
+  }), [theme])
   return (
     <div className={styles.codeEditorWrapper}>
       <FileNameList onChange={setSelectedFileName} />
-      <Editor file={file} onChange={onEditorChangeDebounce} />
+      <Editor file={file} onChange={onEditorChangeDebounce} options={editorOptions} />
     </div>
   )
 }

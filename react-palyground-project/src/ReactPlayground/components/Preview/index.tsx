@@ -1,10 +1,19 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { PlaygroundContext } from "../../PlaygroundContext";
 import { compile } from "./compiler";
 import iframeRaw from "./iframe.html?raw";
 import { IMPORT_MAP_FILE_NAME } from "../../files";
+import { Message } from "../../../components/Message";
+
+interface MessageData {
+  data: {
+    type: string
+    message: string
+  }
+}
 
 export default function Preview() {
+  const { theme } = useContext(PlaygroundContext)
   const { files } = useContext(PlaygroundContext);
   const [compiledCode, setCompiledCode] = React.useState<string>("");
 
@@ -31,9 +40,33 @@ export default function Preview() {
     // ./App.tsx、./App.css 或者 xx.json 之类的依赖通过 blob url 引入
     const compiledCodeData = compile(files);
     setCompiledCode(compiledCodeData);
-    // 当 import maps 的内容或者 compiledCode 的内容变化的时候，就重新生成 blob url。
-    setIframeUrl(getIframeUrl());
+    setError('');
   }, [files]);
+
+  useEffect(() => {
+    // 当 import maps 的内容或者 compiledCode 的内容变化的时候，就重新生成 blob url。
+    setIframeUrl(getIframeUrl())
+  }, [files[IMPORT_MAP_FILE_NAME].value, compiledCode]);
+
+  const [errorType, setErrorType] = useState<"error" | "warn">('warn')
+  const [error, setError] = useState('')
+
+  const handleMessage = (msg: MessageData) => {
+    const { type, message } = msg.data
+    if (type === 'ERROR') {
+      console.log('handleMessage message', message)
+      setError(message)
+      setErrorType('error')
+    }
+  }
+
+  useEffect(() => {
+    // 父窗口里监听 message 事件传过来的错误，用 Message 组件显示
+    window.addEventListener('message', handleMessage)
+    return () => {
+      window.removeEventListener('message', handleMessage)
+    }
+  }, [])
   return (
     <div
       style={{
@@ -48,6 +81,8 @@ export default function Preview() {
           border: "none",
         }}
       ></iframe>
+      {/* 创建了 Message 组件来显示错误 */}
+      <Message theme={theme} type={errorType} content={error} />
     </div>
   );
 }
