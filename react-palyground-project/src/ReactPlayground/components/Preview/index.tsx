@@ -23,7 +23,7 @@ export default function Preview() {
     const res = iframeRaw
       .replace(
         '<script type="importmap"></script>',
-        `<script type="importmap">${files[IMPORT_MAP_FILE_NAME].value}</script>`
+        `<script type="importmap">${files[IMPORT_MAP_FILE_NAME]?.value}</script>`
       )
       .replace(
         '<script type="module" id="appSrc"></script>',
@@ -46,7 +46,7 @@ export default function Preview() {
   useEffect(() => {
     // 当 import maps 的内容或者 compiledCode 的内容变化的时候，就重新生成 blob url。
     setIframeUrl(getIframeUrl())
-  }, [files[IMPORT_MAP_FILE_NAME].value, compiledCode]);
+  }, [files[IMPORT_MAP_FILE_NAME]?.value, compiledCode]);
 
   const [errorType, setErrorType] = useState<"error" | "warn">('warn')
   const [error, setError] = useState('')

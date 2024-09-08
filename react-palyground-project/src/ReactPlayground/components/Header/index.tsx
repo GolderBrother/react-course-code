@@ -3,14 +3,17 @@ import styles from './index.module.scss'
 import logoSvg from '../../icons/logo.svg';
 import { useContext } from 'react';
 import { PlaygroundContext } from '../../PlaygroundContext';
-import { MoonOutlined, SunOutlined } from '@ant-design/icons';
+import { DownloadOutlined, MoonOutlined, ShareAltOutlined, SunOutlined } from '@ant-design/icons';
+import { message } from 'antd';
+import copy from 'copy-to-clipboard';
+import { downloadFiles } from '../../utils';
 
 export default function Header() {
-  const { theme, setTheme} = useContext(PlaygroundContext)
+  const { files, theme, setTheme } = useContext(PlaygroundContext)
   return (
     <div className={styles.header}>
       <div className={styles.logo}>
-        <img alt='logo' src={logoSvg}/>
+        <img alt='logo' src={logoSvg} />
         <span>React Playground</span>
       </div>
       <div className={styles.links}>
@@ -28,6 +31,23 @@ export default function Header() {
             onClick={() => setTheme('light')}
           />
         )}
+        {/* 分享功能 */}
+        <ShareAltOutlined
+          style={{ marginLeft: '10px' }}
+          onClick={() => {
+            copy(window.location.href);
+            message.success('分享链接已复制。')
+          }}
+        />
+        {/* 下载代码功能 */}
+        <DownloadOutlined
+          style={{ marginLeft: '10px' }}
+          onClick={async () => {
+            await downloadFiles(files);
+            message.success('下载完成')
+          }}
+        />
+
       </div>
     </div>
   )

@@ -111,7 +111,7 @@ const getIframeUrl = () => {
     const res = iframeRaw
       .replace(
         '<script type="importmap"></script>',
-        `<script type="importmap">${files[IMPORT_MAP_FILE_NAME].value}</script>`
+        `<script type="importmap">${files[IMPORT_MAP_FILE_NAME]?.value}</script>`
       )
       .replace(
         '<script type="module" id="appSrc"></script>',

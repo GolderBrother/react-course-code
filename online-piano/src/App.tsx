@@ -98,6 +98,7 @@ function App() {
     // 在 currentTime 当前时间设置音量为 0
     gain.gain.setValueAtTime(0, context.currentTime);
     // 0.01 秒后设置为 1，也就是声音是逐渐变大的（linear 是线性）
+    // gain.gain.linearRampToValueAtTime(1, context.currentTime + 0.01);
     gain.gain.linearRampToValueAtTime(1, context.currentTime + 0.01);
 
     osc.start(context.currentTime);
@@ -186,6 +187,82 @@ function App() {
 
     playMusic(music);
   }
+  function playAnHao() {
+    const music = [
+      [1, 500],
+      [2, 500],
+      [3, 500],
+      [5, 500],
+      [6, 500],
+      [5, 250],
+      [5, 250],
+      [6, 500],
+      [5, 250],
+      [5, 250],
+
+      [6, 250],
+      [7, 250],
+      [6, 250],
+      [5, 250],
+      [6, 500],
+      [5, 250],
+      [5, 250],
+
+      [6, 500],
+      [5, 250],
+      [5, 250],
+      [6, 500],
+      [5, 250],
+      [5, 250],
+      
+      [6, 250],
+      [5, 250],
+      [5, 250],
+      [5, 250],
+
+      [6, 500],
+      [5, 250],
+      [5, 250],
+      [6, 500],
+      [5, 250],
+      [5, 250],
+
+      [6, 250],
+      [7, 250],
+      [6, 250],
+      [5, 250],
+
+      [6, 500],
+      [5, 250],
+      [5, 250],
+      [6, 500],
+      [5, 250],
+      [5, 250],
+
+      [5, 500],
+      [0, 500],
+      [1, 500],
+      [3, 500],
+      [5, 500],
+      [5, 500],
+      [3, 250],
+      [5, 250],
+      [5, 500],
+      [3, 250],
+      [5, 250],
+      
+      [5, 250],
+      [3, 250],
+      [3, 500],
+      [1, 500],
+      [1, 750],
+      [1, 500],
+      [3, 500],
+      [5, 500],
+    ];
+
+    playMusic(music);
+  }
   useEffect(() => {
     document.addEventListener('keydown', (e) => {
       play(e.key.toUpperCase());
@@ -208,6 +285,7 @@ function App() {
       <button onClick={() => playSong1()}>世上只有妈妈好</button>
       <button onClick={() => playSong2()}>奢香夫人</button>
       <button onClick={() => playQiFengLe()}>起风了</button>
+      <button onClick={() => playAnHao()}>暗号</button>
     </div>
   </div>
 }

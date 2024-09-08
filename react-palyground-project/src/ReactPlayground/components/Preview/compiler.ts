@@ -97,5 +97,6 @@ const getModuleFile = (files: Files, modulePath: string) => {
 
 export const compile = (files: Files) => {
   const main = files[ENTRY_FILE_NAME];
+  if (!main) return {};
   return babelTransform(ENTRY_FILE_NAME, main.value, files);
 };
