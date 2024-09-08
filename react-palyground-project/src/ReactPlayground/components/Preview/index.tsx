@@ -1,9 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { PlaygroundContext } from "../../PlaygroundContext";
 import { compile } from "./compiler";
 import iframeRaw from "./iframe.html?raw";
 import { IMPORT_MAP_FILE_NAME } from "../../files";
 import { Message } from "../../../components/Message";
+import CompilerWorker from './compiler.worker?worker'
+import debounce from "lodash-es/debounce";
+
 
 interface MessageData {
   data: {
@@ -16,6 +19,28 @@ export default function Preview() {
   const { theme } = useContext(PlaygroundContext)
   const { files } = useContext(PlaygroundContext);
   const [compiledCode, setCompiledCode] = React.useState<string>("");
+  const compilerWorkerRef = useRef<Worker>();
+
+  useEffect(() => {
+    // ，然后拿到 woker 线程传回来的编译后的代码，然后渲染到 iframe 中。
+    if (!compilerWorkerRef.current) {
+      compilerWorkerRef.current = new CompilerWorker();
+      compilerWorkerRef.current.addEventListener('message', (data) => {
+        console.log('worker', data);
+        if (data.type === 'COMPILED_CODE') {
+          setCompiledCode(data.data);
+        } else {
+          //console.log('error', data);
+        }
+      })
+    }
+  }, []);
+  // 主线程这边给 worker 线程传递 files
+  useEffect(debounce(() => {
+    compilerWorkerRef.current?.postMessage(files)
+}, 500), [files]);
+
+
 
   const getIframeUrl = () => {
     console.log(files);

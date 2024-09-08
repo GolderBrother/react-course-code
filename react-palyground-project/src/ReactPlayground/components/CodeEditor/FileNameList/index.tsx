@@ -27,7 +27,7 @@ export default function FileNameList(props: FileNameProps) {
 
   const addTab = () => {
     // 添加了 creating 的 props 来控制 editing 状态，新增的时候添加一个 file ，然后设置 creating 参数为 true 就可以了。
-    const newFileName = 'Comp' + Math.random().toString().slice(2, 8) + '.tsx';
+    const newFileName = 'Comp' + Math.random().toString().slice(2, 6) + '.tsx';
     addFile(newFileName);
     setSelectedFileName(newFileName);
     setCreating(true)
