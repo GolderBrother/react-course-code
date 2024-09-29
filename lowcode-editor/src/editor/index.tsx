@@ -1,9 +1,9 @@
 import { Allotment } from "allotment";
 import 'allotment/dist/style.css';
 import { Header } from "./components/Header";
-import { EditArea } from "./components/EditArea";
+import { EditArea } from "./components/EditArea/index";
 import { Setting } from "./components/Setting";
-import { Material } from "./components/Material";
+import { Material } from "./components/Material/index";
 
 export default function LowcodeEditor() {
     return <div className='h-[100vh] flex flex-col'>
