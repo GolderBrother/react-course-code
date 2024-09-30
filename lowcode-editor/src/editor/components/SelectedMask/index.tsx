@@ -31,7 +31,9 @@ function SelectedMask({
         updatePosition();
     }, [componentId]);
     useEffect(() => {
-        updatePosition();
+        setTimeout(() => {
+            updatePosition();
+        }, 200);
     }, [components]);
     // 调整窗口大小的，编辑框需要重新计算位置
     useEffect(() => {

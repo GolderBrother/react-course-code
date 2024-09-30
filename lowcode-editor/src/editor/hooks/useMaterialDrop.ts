@@ -3,30 +3,31 @@ import { useComponentConfigStore } from "../stores/component-config";
 import { useComponentsStore } from "../stores/components";
 
 export function useMaterialDrop(accept: string[], id: number) {
-    const { addComponent } = useComponentsStore();
-    const { componentConfig } = useComponentConfigStore();
+  const { addComponent } = useComponentsStore();
+  const { componentConfig } = useComponentConfigStore();
 
-    const [{ canDrop }, drop] = useDrop(() => ({
-        accept,
-        drop: (item: { type: string}, monitor) => {
-            // 保证只 drop 一次。
-            const didDrop = monitor.didDrop()
-            if (didDrop) {
-              return;
-            }
+  const [{ canDrop }, drop] = useDrop(() => ({
+    accept,
+    drop: (item: { type: string }, monitor) => {
+      // 保证只 drop 一次。
+      const didDrop = monitor.didDrop()
+      if (didDrop) {
+        return;
+      }
 
-            const { defaultProps: props, desc } = componentConfig[item.type] || {};
-            addComponent({
-                id: new Date().getTime(),
-                name: item.type,
-                desc,
-                props
-            }, id)
-        },
-        collect: (monitor) => ({
-          canDrop: monitor.canDrop(),
-        }),
-    }));
+      const { defaultProps: props, desc, styles = {} } = componentConfig[item.type] || {};
+      addComponent({
+        id: new Date().getTime(),
+        name: item.type,
+        desc,
+        props,
+        styles
+      }, id)
+    },
+    collect: (monitor) => ({
+      canDrop: monitor.canDrop(),
+    }),
+  }));
 
-    return { canDrop, drop }
+  return { canDrop, drop }
 }
