@@ -15,11 +15,11 @@ export function useMaterialDrop(accept: string[], id: number) {
               return;
             }
 
-            const props = componentConfig[item.type].defaultProps;
-
+            const { defaultProps: props, desc } = componentConfig[item.type] || {};
             addComponent({
                 id: new Date().getTime(),
                 name: item.type,
+                desc,
                 props
             }, id)
         },

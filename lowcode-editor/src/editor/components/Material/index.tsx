@@ -6,11 +6,13 @@ export function Material() {
     const { componentConfig } = useComponentConfigStore();
 
     const components = useMemo(() => {
-        return Object.values(componentConfig);
-     }, [componentConfig]);
+        // 不需要展示页面组件
+        return Object.values(componentConfig).filter((item) => item.name !== 'Page')
+            ;
+    }, [componentConfig]);
 
     return components.map((item, index) => {
-        return <MaterialItem name={item.name} key={item.name + index}/>
+        return <MaterialItem desc={item.desc} name={item.name} key={item.name + index} />
     })
-    
+
 }

@@ -2,10 +2,11 @@ import React, { MouseEventHandler, useEffect, useState } from "react";
 import { Component, useComponentsStore } from "../../stores/components";
 import { useComponentConfigStore } from "../../stores/component-config";
 import HoverMask from "../HoverMask";
+import SelectedMask from "../SelectedMask";
 
 export function EditArea() {
   // const {components, addComponent, deleteComponent, updateComponentProps} = useComponentsStore();
-  const { components } = useComponentsStore();
+  const { components, curComponentId, setCurComponentId } = useComponentsStore();
   const { componentConfig } = useComponentConfigStore();
   const [hoverComponentId, setHoverComponentId] = useState<number>();
 
@@ -25,6 +26,20 @@ export function EditArea() {
 
   const handleMouseLeave: MouseEventHandler = () => {
     setHoverComponentId(undefined);
+  }
+
+  const handleClick = (e: MouseEventHandler) => {
+    const path = e.nativeEvent.composedPath();
+
+    for (let i = 0; i < path.length; i += 1) {
+      const ele = path[i] as HTMLElement;
+
+      const componentId = ele.dataset?.componentId;
+      if (componentId) {
+        setCurComponentId(+componentId);
+        return;
+      }
+    }
   }
 
   function renderComponents(components: Component[]): React.ReactNode {
@@ -49,32 +64,22 @@ export function EditArea() {
       );
     });
   }
-  // return (
-  //   <div className="h-[100%] edit-area" onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}
-  //   >
-  //     {/* <pre>{JSON.stringify(components, null, 2)}</pre> */}
-  //     {renderComponents(components)}
-  //     {hoverComponentId && (
-  //       <HoverMask
-  //         containerClassName='edit-area'
-  //         componentId={hoverComponentId}
-  //       />
-  //     )}
-
-  //   </div>
-  // );
-  const handleClick = (e) => {
-    console.log('click e', e)
-  }
   return <div className="h-[100%] edit-area" onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onClick={handleClick}>
     {renderComponents(components)}
-    {hoverComponentId && (
-        <HoverMask
-            portalWrapperClassName='portal-wrapper'
-            containerClassName='edit-area'
-            componentId={hoverComponentId}
-        />
+    {hoverComponentId && hoverComponentId !== curComponentId && (
+      <HoverMask
+        portalWrapperClassName='portal-wrapper'
+        containerClassName='edit-area'
+        componentId={hoverComponentId}
+      />
+    )}
+    {curComponentId && (
+      <SelectedMask
+        portalWrapperClassName='portal-wrapper'
+        containerClassName='edit-area'
+        componentId={curComponentId}
+      />
     )}
     <div className="portal-wrapper"></div>
-</div>
+  </div>
 }
