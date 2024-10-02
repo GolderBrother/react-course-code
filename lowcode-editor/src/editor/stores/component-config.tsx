@@ -1,8 +1,14 @@
 import { create } from 'zustand';
-import Container from '../materials/Container';
-import Button from '../materials/Button';
-import Page from '../materials/Page';
+import EditContainer from '../materials/Container/edit';
+import PreviewContainer from '../materials/Container/preview';
+
+import EditButton from '../materials/Button/edit';
+import PreviewButton from '../materials/Button/preview';
+
+import EditPage from '../materials/Page/edit';
+import PreviewPage from '../materials/Page/preview';
 import { CSSProperties } from 'react';
+import { CommonComponentProps } from '../interface';
 
 export interface ComponentSetter {
     name: string;
@@ -18,7 +24,11 @@ export interface ComponentConfig {
     styles?: CSSProperties;
     setter?: ComponentSetter[]
     stylesSetter?: ComponentSetter[]
-    component: unknown
+    // component: unknown
+    edit: (props: CommonComponentProps) => JSX.Element
+    preview: (props: CommonComponentProps) => JSX.Element
+    dev: Record<string, unknown>
+    prod: Record<string, unknown>
 }
 
 interface State {
@@ -35,7 +45,9 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
             name: 'Container',
             defaultProps: {},
             desc: '容器',
-            component: Container
+            edit: EditContainer,
+            preview: PreviewContainer,
+            // component: EditContainer
         },
         Button: {
             name: 'Button',
@@ -70,13 +82,17 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
                 }
             ],
             desc: '按钮',
-            component: Button
+            edit: EditButton,
+            preview: PreviewButton,
+            // component: Button
         },
         Page: {
             name: 'Page',
             desc: '页面',
             defaultProps: {},
-            component: Page
+            edit: EditPage,
+            preview: PreviewPage,
+            // component: Page
         }
     },
     registerComponent: (name, componentConfig) => set((state) => {

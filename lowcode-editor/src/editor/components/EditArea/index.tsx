@@ -45,12 +45,12 @@ export function EditArea() {
   function renderComponents(components: Component[]): React.ReactNode {
     return components.map((component: Component) => {
       const config = componentConfig?.[component.name];
-      if (!config?.component) {
+      if (!config?.edit) {
         return null;
       }
 
       return React.createElement(
-        config.component,
+        config.edit,
         // props 是配置里的 defaultProps 用 component.props 覆盖后的结果
         {
           key: component.id,

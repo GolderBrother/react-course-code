@@ -1,18 +1,19 @@
-import { Allotment } from "allotment";
-import 'allotment/dist/style.css';
 import { Header } from "./components/Header";
-import { EditArea } from "./components/EditArea/index";
-import { Setting } from "./components/Setting";
-import { Material } from "./components/Material/index";
+import { useComponentsStore } from "./stores/components";
+import { Edit } from "./components/Edit";
+import { Preview } from "./components/Preview";
 
 export default function LowcodeEditor() {
-    return <div className='h-[100vh] flex flex-col'>
-        <div className='h-[60px] flex items-center border-b-[1px] border-[#000]'>
-            <Header />
-        </div>
-        <Allotment>
+  const { mode } = useComponentsStore();
+  return (
+    <div className="h-[100vh] flex flex-col">
+      <div className="h-[60px] flex items-center border-b-[1px] border-[#000]">
+        <Header />
+      </div>
+      {mode === "edit" ? <Edit /> : <Preview />}
+      {/* <Allotment>
             <Allotment.Pane preferredSize={240} maxSize={300} minSize={200}>
-                <Material />
+                <MaterialWrapper />
             </Allotment.Pane>
             <Allotment.Pane>
                 <EditArea />
@@ -20,6 +21,7 @@ export default function LowcodeEditor() {
             <Allotment.Pane preferredSize={300} maxSize={500} minSize={300}>
                 <Setting />
             </Allotment.Pane>
-        </Allotment>
+        </Allotment> */}
     </div>
+  );
 }
