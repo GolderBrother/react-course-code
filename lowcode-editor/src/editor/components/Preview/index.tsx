@@ -2,6 +2,8 @@ import React from "react";
 import { useComponentConfigStore } from "../../stores/component-config";
 import { Component, useComponentsStore } from "../../stores/components"
 import { message } from "antd";
+import { GoToLinkConfig } from "../Setting/actions/GoToLink";
+import { ShowMessageConfig } from "../Setting/actions/ShowMessage";
 
 export function Preview() {
     const { components } = useComponentsStore();
@@ -11,24 +13,26 @@ export function Preview() {
 
         componentConfig[component.name].events?.forEach((event) => {
             const eventConfig = component.props[event.name];
-
+            console.log('handleEvent eventConfig', eventConfig);
             if (eventConfig) {
-                const { type } = eventConfig;
                 const eventHandler = () => {
-                    if (type === 'goToLink' && eventConfig.url) {
-                        window.location.href = eventConfig.url;
-                    } else if (type === 'showMessage' && eventConfig.config) {
-                        const { text } = eventConfig.config;
-                        if (eventConfig.config.type === 'info') {
-                            message.info(text);
-                        } else if (eventConfig.config.type === 'success') {
-                            message.success(text);
-                        } else if (eventConfig.config.type === 'warn') {
-                            message.warning(text);
-                        } else if (eventConfig.config.type === 'error') {
-                            message.error(text);
+                    eventConfig.actions.forEach((action: GoToLinkConfig | ShowMessageConfig) => {
+                        const { type, config } = action;
+                        if (type === 'goToLink' && action.url) {
+                            window.location.href = action.url;
+                        } else if (type === 'showMessage' && action.config) {
+                            const { text } = action.config;
+                            if (config.type === 'info') {
+                                message.info(text);
+                            } else if (config.type === 'success') {
+                                message.success(text);
+                            } else if (config.type === 'warn') {
+                                message.warning(text);
+                            } else if (config.type === 'error') {
+                                message.error(text);
+                            }
                         }
-                    }
+                    })
                 }
                 props[event.name] = eventHandler;
             }
