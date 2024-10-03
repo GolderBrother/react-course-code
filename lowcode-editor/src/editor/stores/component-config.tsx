@@ -16,6 +16,11 @@ export interface ComponentSetter {
     type: string;
     [key: string]: any;
 }
+export interface ComponentEvent {
+    name: string
+    label: string
+}
+
 
 export interface ComponentConfig {
     name: string;
@@ -24,11 +29,9 @@ export interface ComponentConfig {
     styles?: CSSProperties;
     setter?: ComponentSetter[]
     stylesSetter?: ComponentSetter[]
-    // component: unknown
+    events?: ComponentEvent[]; // 事件
     edit: (props: CommonComponentProps) => JSX.Element
     preview: (props: CommonComponentProps) => JSX.Element
-    dev: Record<string, unknown>
-    prod: Record<string, unknown>
 }
 
 interface State {
@@ -81,6 +84,16 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
                     type: 'inputNumber',
                 }
             ],
+            events: [
+                {
+                    name: 'onClick',
+                    label: '点击事件',
+                },
+                {
+                    name: 'onDoubleClick',
+                    label: '双击事件'
+                },
+            ],            
             desc: '按钮',
             edit: EditButton,
             preview: PreviewButton,
