@@ -5,7 +5,7 @@ import { useDrag } from 'react-dnd';
 
 const Container = ({ id, children, styles }: CommonComponentProps) => {
   const divRef = useRef<HTMLDivElement | null>(null)
-  const { canDrop, drop } = useMaterialDrop(['Button', 'Container', 'Modal', 'Table'], id);
+  const { canDrop, drop } = useMaterialDrop(['Button', 'Container', 'Modal', 'Table', 'Form'], id);
   const className = useMemo(() => `min-h-[100px] p-[20px] ${canDrop ? 'border-[2px] border-[blue]' : 'border-[1px] border-[#000]'}`, [canDrop])
   const [_, drag] = useDrag({
     type: 'Button',

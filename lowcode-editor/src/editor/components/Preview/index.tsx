@@ -14,7 +14,7 @@ export function Preview() {
     componentConfig[component.name].events?.forEach((event) => {
       const eventConfig = component.props[event.name];
       if (eventConfig) {
-        const eventHandler = () => {
+        const eventHandler = (...args: unknown[]) => {
           eventConfig.actions.forEach((action: ActionConfig) => {
             const { type, config } = action;
             if (type === "goToLink" && action.url) {
@@ -32,23 +32,23 @@ export function Preview() {
               }
             } else if (type === "customJS") {
               if (action.code) {
-                const func = new Function("context", action.code);
+                const func = new Function("context", "args", action.code);
                 func({
                   name: component.name,
                   props: component.props,
                   showMessage(content: string) {
                     message.success(content);
                   },
-                });
+                }, args);
               }
-            }else if (type === "componentMethod") {
-                // 收集所有的 refs，按照 id 来索引
-                const component = componentRefs.current[action.config.componentId];
-                // 调用方法的时候根据 componentId 和 method 来调用
-                const fn = component[action.config.method];
-                if (typeof fn === 'function') {
-                  fn();
-                }
+            } else if (type === "componentMethod") {
+              // 收集所有的 refs，按照 id 来索引
+              const component = componentRefs.current[action.config.componentId];
+              // 调用方法的时候根据 componentId 和 method 来调用
+              const fn = component[action.config.method];
+              if (typeof fn === 'function') {
+                fn(...args);
+              }
             }
           });
         };

@@ -17,6 +17,12 @@ import PreviewTable from '../materials/Table/preview';
 import EditTableColumn from '../materials/TableColumn/edit';
 import PreviewTableColumn from '../materials/TableColumn/preview';
 
+import EditForm from '../materials/Form/edit';
+import PreviewForm from '../materials/Form/preview';
+
+import EditFormItem from '../materials/FormItem/edit';
+import PreviewFormItem from '../materials/FormItem/preview';
+
 import { CSSProperties } from 'react';
 import { CommonComponentProps } from '../interface';
 
@@ -209,7 +215,85 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
             ],
             edit: EditTableColumn,
             preview: PreviewTableColumn,
+        },
+        Form: {
+            name: 'Form',
+            defaultProps: {},
+            desc: '表单',
+            setter: [
+                {
+                    name: 'title',
+                    label: '标题',
+                    type: 'input',
+                },
+            ],
+            events: [
+                {
+                    name: 'onFinish',
+                    label: '提交事件',
+                }
+            ],
+            // 组件暴露出去的方法
+            methods: [
+                {
+                    name: 'submit',
+                    label: '提交',
+                }
+            ],            
+            edit: EditForm,
+            preview: PreviewForm,
+        },
+        FormItem: {
+            name: 'FormItem',
+            desc: '表单项',
+            defaultProps: {
+                name: new Date().getTime(),
+                type: 'input',
+                label: '姓名',
+            },
+            edit: EditFormItem,
+            preview: PreviewFormItem,
+            setter: [
+              {
+                name: 'type',
+                label: '类型',
+                type: 'select',
+                options: [
+                  {
+                    label: '文本',
+                    value: 'input',
+                  },
+                  {
+                    label: '日期',
+                    value: 'date',
+                  },
+                ],
+              },
+              {
+                name: 'label',
+                label: '标题',
+                type: 'input',
+              },
+              {
+                name: 'name',
+                label: '字段',
+                type: 'input',
+              },
+              {
+                name: 'rules',
+                label: '校验',
+                type: 'select',
+                options: [
+                  {
+                    label: '必填',
+                    value: 'required',
+                  },
+                ],
+              }
+            ]
         }
+        
+
     },
     registerComponent: (name, componentConfig) => set((state) => {
         return {
