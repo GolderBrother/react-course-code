@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useComponentsStore } from "../../../stores/components";
 import TextArea from "antd/es/input/TextArea";
 export interface GoToLinkConfig {
@@ -6,28 +6,13 @@ export interface GoToLinkConfig {
     url: string
 }
 export interface GoToLinkProps {
+    value?: string
     defaultValue?: string
     onChange?: (config: GoToLinkConfig) => void
 }
 
 export function GoToLink(props: GoToLinkProps) {
-    // const { event } = props;
-
-    // const { curComponentId, curComponent, updateComponentProps } = useComponentsStore();
-
-    // function urlChange(eventName: string, value: string) {
-    //     if (!curComponentId) return;
-
-    //     updateComponentProps(curComponentId, {
-    //         [eventName]: {
-    //             ...curComponent?.props?.[eventName],
-    //             url: value
-    //         }
-    //     })
-    // }
-
-
-    const { defaultValue, onChange } = props;
+    const { value: val, defaultValue, onChange } = props;
 
     const { curComponentId } = useComponentsStore();
     const [value, setValue] = useState(defaultValue);
@@ -41,6 +26,10 @@ export function GoToLink(props: GoToLinkProps) {
             url: value
         });
     }
+
+    useEffect(() => {
+        setValue(val);
+    }, [val])
 
     return <div className='mt-[40px]'>
         <div className='flex items-center gap-[10px]'>

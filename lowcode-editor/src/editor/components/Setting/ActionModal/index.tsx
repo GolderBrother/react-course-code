@@ -1,24 +1,36 @@
 import { Modal, Segmented } from "antd";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { GoToLink, GoToLinkConfig } from "../actions/GoToLink";
 import { ShowMessage, ShowMessageConfig } from "../actions/ShowMessage";
-import { ComponentEvent } from "../../../stores/component-config";
+// import { ComponentEvent } from "../../../stores/component-config";
+import { CustomJS, CustomJSConfig } from "../actions/CustomJS";
 
-interface ActionModalProps {
+export interface ActionModalProps {
+  action?: ActionConfig
+  // eventConfig: ComponentEvent;
   visible: boolean;
-  eventConfig: ComponentEvent;
-  handleOk: () => void;
+  handleOk: (config?: ActionConfig) => void;
   handleCancel: () => void;
 }
 
+export type ActionConfig =
+  | GoToLinkConfig
+  | ShowMessageConfig
+  | CustomJSConfig;
+
 export function ActionModal(props: ActionModalProps) {
-  const { visible, handleOk, handleCancel } = props;
-
-  const [key, setKey] = useState<string>("访问链接");
-  const [curConfig, setCurConfig] = useState<
-    GoToLinkConfig | ShowMessageConfig
-  >();
-
+  const { action, visible, handleOk, handleCancel } = props;
+  const [key, setKey] = useState<string>("GoToLink");
+  const [curConfig, setCurConfig] = useState<ActionConfig>();
+  const goToLinkDefaultValue = useMemo(() => {
+      return action?.type === 'goToLink' ? action.url : ''
+  }, [action?.url, action?.type])
+  const showMessageDefaultValue = useMemo(() => {
+    return action?.type === 'showMessage' ? action.config : undefined
+  }, [action?.config, action?.type])
+  const customJSDefaultValue = useMemo(() => {
+    return action?.type === 'customJS' ? action.code : ''
+  }, [action?.code, action?.type])
   return (
     <Modal
       title="事件动作配置"
@@ -34,17 +46,27 @@ export function ActionModal(props: ActionModalProps) {
           value={key}
           onChange={setKey}
           block
-          options={["访问链接", "消息提示", "自定义 JS"]}
+          options={["GoToLink", "ShowMessage", "CustomJS"]}
         />
-        {key === "访问链接" && (
+        {key === "GoToLink" && (
           <GoToLink
+            value={goToLinkDefaultValue}
             onChange={(config) => {
               setCurConfig(config);
             }}
           />
         )}
-        {key === "消息提示" && (
+        {key === "ShowMessage" && (
           <ShowMessage
+            value={showMessageDefaultValue}
+            onChange={(config) => {
+              setCurConfig(config);
+            }}
+          />
+        )}
+        {key === "CustomJS" && (
+          <CustomJS
+            value={customJSDefaultValue}
             onChange={(config) => {
               setCurConfig(config);
             }}

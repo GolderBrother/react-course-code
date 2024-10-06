@@ -11,17 +11,6 @@ export default function LowcodeEditor() {
         <Header />
       </div>
       {mode === "edit" ? <Edit /> : <Preview />}
-      {/* <Allotment>
-            <Allotment.Pane preferredSize={240} maxSize={300} minSize={200}>
-                <MaterialWrapper />
-            </Allotment.Pane>
-            <Allotment.Pane>
-                <EditArea />
-            </Allotment.Pane>
-            <Allotment.Pane preferredSize={300} maxSize={500} minSize={300}>
-                <Setting />
-            </Allotment.Pane>
-        </Allotment> */}
     </div>
   );
 }

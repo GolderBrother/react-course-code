@@ -73,8 +73,6 @@ export function ComponentStyle() {
             styleToObject(cssStr, (name, value) => {
                 css[name.replace(/-\w/, (item) => item.toUpperCase().replace('-', ''))] = value;
             });
-
-            console.log(css);
             updateComponentStyles(curComponentId, css);
         } catch (e) { 
             console.error('e', e)

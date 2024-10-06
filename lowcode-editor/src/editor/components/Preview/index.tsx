@@ -2,8 +2,7 @@ import React from "react";
 import { useComponentConfigStore } from "../../stores/component-config";
 import { Component, useComponentsStore } from "../../stores/components"
 import { message } from "antd";
-import { GoToLinkConfig } from "../Setting/actions/GoToLink";
-import { ShowMessageConfig } from "../Setting/actions/ShowMessage";
+import { ActionConfig } from "../Setting/ActionModal";
 
 export function Preview() {
     const { components } = useComponentsStore();
@@ -13,10 +12,9 @@ export function Preview() {
 
         componentConfig[component.name].events?.forEach((event) => {
             const eventConfig = component.props[event.name];
-            console.log('handleEvent eventConfig', eventConfig);
             if (eventConfig) {
                 const eventHandler = () => {
-                    eventConfig.actions.forEach((action: GoToLinkConfig | ShowMessageConfig) => {
+                    eventConfig.actions.forEach((action: ActionConfig) => {
                         const { type, config } = action;
                         if (type === 'goToLink' && action.url) {
                             window.location.href = action.url;
@@ -30,6 +28,17 @@ export function Preview() {
                                 message.warning(text);
                             } else if (config.type === 'error') {
                                 message.error(text);
+                            }
+                        } else if (type === 'customJS') {
+                            if (action.code) {
+                                const func = new Function('context', action.code);
+                                func({
+                                    name: component.name,
+                                    props: component.props,
+                                    showMessage(content: string) {
+                                        message.success(content)
+                                    }
+                                });
                             }
                         }
                     })

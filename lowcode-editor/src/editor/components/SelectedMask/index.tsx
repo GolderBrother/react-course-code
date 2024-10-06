@@ -79,13 +79,12 @@ function SelectedMask({
 
     const el = useMemo(() => {
         return document.querySelector(`.${portalWrapperClassName}`)!;
-    }, []);
+    }, [portalWrapperClassName]);
     const curComponent = useMemo(() => {
         return getComponentById(componentId, components);
     }, [componentId]);
 
     function handleDelete() {
-        console.log("handleDelete");
         if (curComponentId) deleteComponent(curComponentId);
         setCurComponentId(null);
     }

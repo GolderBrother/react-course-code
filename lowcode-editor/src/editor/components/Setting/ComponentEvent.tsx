@@ -1,15 +1,15 @@
 import { Collapse, CollapseProps, Button } from "antd";
 import { useComponentsStore } from "../../stores/components";
 import { useComponentConfigStore } from "../../stores/component-config";
-import { GoToLinkConfig } from "./actions/GoToLink";
-import { ShowMessageConfig } from "./actions/ShowMessage";
+import { ActionConfig, ActionModal } from './ActionModal';
 import { useMemo, useState } from "react";
-import { ActionModal } from "./ActionModal";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 export function ComponentEvent() {
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const [curEvent, setCurEvent] = useState<typeof ComponentEvent>();
+  const [curAction, setCurAction] = useState<ActionConfig>();
+  const [curActionIndex, setCurActionIndex] = useState<number>();
   const { curComponent, updateComponentProps } =
     useComponentsStore();
   const { componentConfig } = useComponentConfigStore();
@@ -30,7 +30,7 @@ export function ComponentEvent() {
 
     if (index !== -1) {
       actions.splice(index, 1);
-  
+
       updateComponentProps(curComponent.id, {
         [event.name]: {
           actions: actions,
@@ -44,7 +44,37 @@ export function ComponentEvent() {
   const hideActionModal = () => {
     setActionModalOpen(false);
   };
-  
+  const EditButton = ({ item, index }: {
+    item: ActionConfig
+    index: number
+  }) => {
+    function editAction(config: ActionConfig) {
+      if (!curComponent) {
+        return;
+      }
+      setCurAction(config)
+      setCurActionIndex(index)
+      setActionModalOpen(true);
+    }
+
+    return <div style={{ position: 'absolute', top: 10, right: 30, cursor: 'pointer' }}
+      onClick={() => editAction(item, index)}
+    ><EditOutlined /></div>
+  }
+
+  const DeleteButton = ({
+    event,
+    index
+  }: {
+    event: typeof ComponentEvent, index: number;
+  }) => {
+    return (
+      <div style={{ position: 'absolute', top: 10, right: 10, cursor: 'pointer' }}
+        onClick={() => deleteAction(event, index)}
+      ><DeleteOutlined /></div>
+    );
+  }
+
   const items: CollapseProps["items"] = (
     componentConfig[curComponent.name].events || []
   ).map((event) => {
@@ -58,6 +88,7 @@ export function ComponentEvent() {
             onClick={(e) => {
               e.stopPropagation?.();
               setCurEvent(event);
+              setCurAction(void 0)
               showActionModal();
             }}
           >
@@ -68,24 +99,15 @@ export function ComponentEvent() {
       children: (
         <div>
           {(curComponent.props[event.name]?.actions || []).map(
-            (item: GoToLinkConfig | ShowMessageConfig, index: number) => {
+            (item: ActionConfig, index: number) => {
               return (
                 <div key={item.type + index}>
                   {item.type === "goToLink" ? (
                     <div className="border border-[#aaa] m-[10px] p-[10px] relative">
                       <div className="text-[blue]">跳转链接</div>
                       <div>{item.url}</div>
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: 10,
-                          right: 10,
-                          cursor: "pointer",
-                        }}
-                        onClick={() => deleteAction(event, index)}
-                      >
-                        <DeleteOutlined />
-                      </div>
+                      <EditButton item={item} index={index} />
+                      <DeleteButton event={event} index={index} />
                     </div>
                   ) : null}
                   {item.type === "showMessage" ? (
@@ -93,11 +115,17 @@ export function ComponentEvent() {
                       <div className="text-[blue]">消息弹窗</div>
                       <div>{item.config.type}</div>
                       <div>{item.config.text}</div>
-                      <div style={{ position: 'absolute', top: 10, right: 10, cursor: 'pointer' }}
-                        onClick={() => deleteAction(event, index)}
-                      ><DeleteOutlined /></div>
+                      <EditButton item={item} index={index} />
+                      <DeleteButton event={event} index={index} />
                     </div>
                   ) : null}
+                  {
+                    item.type === 'customJS' ? <div key="customJS" className='border border-[#aaa] m-[10px] p-[10px] relative'>
+                      <div className='text-[blue]'>自定义 JS</div>
+                      <EditButton item={item} />
+                      <DeleteButton event={event} index={index} />
+                    </div> : null
+                  }
                 </div>
               );
             }
@@ -107,19 +135,28 @@ export function ComponentEvent() {
     };
   });
 
-  function handleOk(config?: GoToLinkConfig | ShowMessageConfig) {
+  function handleOk(config?: ActionConfig) {
     if (!config || !curEvent || !curComponent) {
       return;
     }
-
-    updateComponentProps(curComponent.id, {
-      [curEvent.name]: {
-        actions: [
-          ...(curComponent.props[curEvent.name]?.actions || []),
-          config,
-        ],
-      },
-    });
+    // 保存的时候如果有 curAction，就是修改，没有的话才是新增。
+    if (curAction) {
+      const newActions = curComponent.props[curEvent.name]?.actions.map((item: ActionConfig, index: number) => (index === curActionIndex ? config : item));
+      updateComponentProps(curComponent.id, {
+        [curEvent.name]: {
+          actions: newActions,
+        },
+      });
+    } else {
+      updateComponentProps(curComponent.id, {
+        [curEvent.name]: {
+          actions: [
+            ...(curComponent.props[curEvent.name]?.actions || []),
+            config,
+          ],
+        },
+      });
+    }
 
     setActionModalOpen(false);
   }
@@ -135,9 +172,10 @@ export function ComponentEvent() {
         defaultActiveKey={defaultActiveKey}
         items={items}
       />
+      {/* eventConfig={curEvent!} */}
       <ActionModal
         visible={actionModalOpen}
-        eventConfig={curEvent!}
+        action={curAction}
         handleOk={handleOk}
         handleCancel={handleCancel}
       />
