@@ -1,5 +1,5 @@
 import { Collapse, CollapseProps, Button } from "antd";
-import { useComponentsStore } from "../../stores/components";
+import { getComponentById, useComponentsStore } from "../../stores/components";
 import { useComponentConfigStore } from "../../stores/component-config";
 import { ActionConfig, ActionModal } from './ActionModal';
 import { useMemo, useState } from "react";
@@ -10,7 +10,7 @@ export function ComponentEvent() {
   const [curEvent, setCurEvent] = useState<typeof ComponentEvent>();
   const [curAction, setCurAction] = useState<ActionConfig>();
   const [curActionIndex, setCurActionIndex] = useState<number>();
-  const { curComponent, updateComponentProps } =
+  const { curComponent, components, updateComponentProps } =
     useComponentsStore();
   const { componentConfig } = useComponentConfigStore();
   const defaultActiveKey = useMemo(
@@ -21,6 +21,15 @@ export function ComponentEvent() {
     [componentConfig, curComponent?.name]
   );
   if (!curComponent) return null;
+  function editAction(config: ActionConfig, index: number) {
+    if (!curComponent) {
+      return;
+    }
+    setCurAction(config)
+    setCurActionIndex(index)
+    setActionModalOpen(true);
+  }
+
   function deleteAction(event: typeof ComponentEvent, index: number) {
     if (!curComponent) {
       return;
@@ -48,15 +57,6 @@ export function ComponentEvent() {
     item: ActionConfig
     index: number
   }) => {
-    function editAction(config: ActionConfig) {
-      if (!curComponent) {
-        return;
-      }
-      setCurAction(config)
-      setCurActionIndex(index)
-      setActionModalOpen(true);
-    }
-
     return <div style={{ position: 'absolute', top: 10, right: 30, cursor: 'pointer' }}
       onClick={() => editAction(item, index)}
     ><EditOutlined /></div>
@@ -122,10 +122,25 @@ export function ComponentEvent() {
                   {
                     item.type === 'customJS' ? <div key="customJS" className='border border-[#aaa] m-[10px] p-[10px] relative'>
                       <div className='text-[blue]'>自定义 JS</div>
-                      <EditButton item={item} />
+                      <EditButton item={item} index={index} />
                       <DeleteButton event={event} index={index} />
                     </div> : null
                   }
+                  {
+                    item.type === 'componentMethod' ? <div key="componentMethod" className='border border-[#aaa] m-[10px] p-[10px] relative'>
+                      <div className='text-[blue]'>组件方法</div>
+                      <div>{getComponentById(item.config.componentId, components)?.desc}</div>
+                      <div>{item.config.componentId}</div>
+                      <div>{item.config.method}</div>
+                      <div style={{ position: 'absolute', top: 10, right: 30, cursor: 'pointer' }}
+                        onClick={() => editAction(item, index)}
+                      ><EditOutlined /></div>
+                      <div style={{ position: 'absolute', top: 10, right: 10, cursor: 'pointer' }}
+                        onClick={() => deleteAction(event, index)}
+                      ><DeleteOutlined /></div>
+                    </div> : null
+                  }
+
                 </div>
               );
             }

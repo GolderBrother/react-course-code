@@ -5,6 +5,9 @@ import PreviewContainer from '../materials/Container/preview';
 import EditButton from '../materials/Button/edit';
 import PreviewButton from '../materials/Button/preview';
 
+import EditModal from '../materials/Modal/edit';
+import PreviewModal from '../materials/Modal/preview';
+
 import EditPage from '../materials/Page/edit';
 import PreviewPage from '../materials/Page/preview';
 import { CSSProperties } from 'react';
@@ -21,6 +24,10 @@ export interface ComponentEvent {
     label: string
 }
 
+export interface ComponentMethod {
+    name: string
+    label: string
+}
 
 export interface ComponentConfig {
     name: string;
@@ -30,6 +37,7 @@ export interface ComponentConfig {
     setter?: ComponentSetter[]
     stylesSetter?: ComponentSetter[]
     events?: ComponentEvent[]; // 事件
+    methods?: ComponentMethod[]; // 方法
     edit: (props: CommonComponentProps) => JSX.Element
     preview: (props: CommonComponentProps) => JSX.Element
 }
@@ -93,7 +101,7 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
                     name: 'onDoubleClick',
                     label: '双击事件'
                 },
-            ],            
+            ],
             desc: '按钮',
             edit: EditButton,
             preview: PreviewButton,
@@ -106,7 +114,45 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
             edit: EditPage,
             preview: PreviewPage,
             // component: Page
-        }
+        },
+        Modal: {
+            name: 'Modal',
+            defaultProps: {
+                title: '弹窗'
+            },
+            setter: [
+                {
+                    name: 'title',
+                    label: '标题',
+                    type: 'input'
+                }
+            ],
+            stylesSetter: [],
+            events: [
+                {
+                    name: 'onOk',
+                    label: '确认事件',
+                },
+                {
+                    name: 'onCancel',
+                    label: '取消事件'
+                },
+            ],
+            methods: [
+                {
+                    name: 'open',
+                    label: '打开弹窗',
+                },
+                {
+                    name: 'close',
+                    label: '关闭弹窗'
+                }
+            ],
+            desc: '弹窗',
+            edit: EditModal,
+            preview: PreviewModal
+        },
+
     },
     registerComponent: (name, componentConfig) => set((state) => {
         return {

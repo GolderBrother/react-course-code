@@ -3,7 +3,7 @@ import { CommonComponentProps } from "../../interface";
 import { useMaterialDrop } from "../../hooks/useMaterialDrop";
 
 function Page({ id, name, children, styles }: CommonComponentProps) {
-  const { canDrop, drop } = useMaterialDrop(['Button', 'Container'], id);
+  const { canDrop, drop } = useMaterialDrop(['Button', 'Container', 'Modal'], id);
   const style = useMemo(() => ({
     ...styles,
     // canDrop 的话加一个 border 的高亮
