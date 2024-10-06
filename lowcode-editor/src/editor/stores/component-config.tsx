@@ -10,6 +10,13 @@ import PreviewModal from '../materials/Modal/preview';
 
 import EditPage from '../materials/Page/edit';
 import PreviewPage from '../materials/Page/preview';
+
+import EditTable from '../materials/Table/edit';
+import PreviewTable from '../materials/Table/preview';
+
+import EditTableColumn from '../materials/TableColumn/edit';
+import PreviewTableColumn from '../materials/TableColumn/preview';
+
 import { CSSProperties } from 'react';
 import { CommonComponentProps } from '../interface';
 
@@ -152,7 +159,57 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
             edit: EditModal,
             preview: PreviewModal
         },
-
+        Table: {
+            name: 'Table',
+            defaultProps: {},
+            desc: '表格',
+            setter: [
+                {
+                    name: 'url',
+                    label: 'url',
+                    type: 'input',
+                },
+            ],
+            edit: EditTable,
+            preview: PreviewTable
+        },
+        TableColumn: {
+            name: 'TableColumn',
+            desc: '表格列',
+            defaultProps: {
+                dataIndex: `col_${new Date().getTime()}`,
+                title: '列名'
+            },
+            setter: [
+                {
+                    name: 'type',
+                    label: '类型',
+                    type: 'select',
+                    options: [
+                        {
+                            label: '文本',
+                            value: 'text',
+                        },
+                        {
+                            label: '日期',
+                            value: 'date',
+                        },
+                    ],
+                },
+                {
+                    name: 'title',
+                    label: '标题',
+                    type: 'input',
+                },
+                {
+                    name: 'dataIndex',
+                    label: '字段',
+                    type: 'input',
+                },
+            ],
+            edit: EditTableColumn,
+            preview: PreviewTableColumn,
+        }
     },
     registerComponent: (name, componentConfig) => set((state) => {
         return {

@@ -6,7 +6,6 @@ export interface MaterialItemProps {
 }
 
 export function MaterialItem(props: MaterialItemProps) {
-
     const {
         desc,
         name
@@ -20,7 +19,7 @@ export function MaterialItem(props: MaterialItemProps) {
     return <div
         ref={drag}
         className='
-                border-dashed
+            border-dashed
             border-[1px]
             border-[#000]
             py-[8px] px-[10px] 
