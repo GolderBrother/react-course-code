@@ -32,13 +32,13 @@ export function Preview() {
               }
             } else if (type === "customJS") {
               if (action.code) {
-                const func = new Function("context", "args", action.code);
+                const func = new Function('context', 'args', action.code);
                 func({
                   name: component.name,
                   props: component.props,
                   showMessage(content: string) {
-                    message.success(content);
-                  },
+                    message.success(content)
+                  }
                 }, args);
               }
             } else if (type === "componentMethod") {

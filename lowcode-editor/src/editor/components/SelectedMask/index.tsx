@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { getComponentById, useComponentsStore } from "../../stores/components";
 import { Dropdown, Popconfirm, Space } from "antd";
@@ -76,7 +76,10 @@ function SelectedMask({
             labelLeft,
         });
     }
-
+    // const el = useRef<Element | null>(null);
+    // useEffect(() => {
+    //     el.current = document.querySelector(`.${portalWrapperClassName}`);
+    // }, [portalWrapperClassName]);
     const el = useMemo(() => {
         return document.querySelector(`.${portalWrapperClassName}`)!;
     }, [portalWrapperClassName]);
@@ -98,7 +101,7 @@ function SelectedMask({
         }
 
         return parentComponents;
-    }, [curComponent]);
+    }, [components, curComponent]);
     const wrapperStyle = useMemo(() => {
         return {
             position: "absolute",
@@ -115,6 +118,8 @@ function SelectedMask({
         };
     }, [position.height, position.left, position.top, position.width]);
 
+    if (!el) return null;
+    // if (!el.current) return null;
     return createPortal(
         <>
             <div style={wrapperStyle} />
@@ -172,6 +177,7 @@ function SelectedMask({
             </div>
         </>,
         el
+        // el.current!
     );
 }
 

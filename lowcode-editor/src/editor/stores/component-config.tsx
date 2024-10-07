@@ -239,7 +239,7 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
                     name: 'submit',
                     label: '提交',
                 }
-            ],            
+            ],
             edit: EditForm,
             preview: PreviewForm,
         },
@@ -254,45 +254,45 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
             edit: EditFormItem,
             preview: PreviewFormItem,
             setter: [
-              {
-                name: 'type',
-                label: '类型',
-                type: 'select',
-                options: [
-                  {
-                    label: '文本',
-                    value: 'input',
-                  },
-                  {
-                    label: '日期',
-                    value: 'date',
-                  },
-                ],
-              },
-              {
-                name: 'label',
-                label: '标题',
-                type: 'input',
-              },
-              {
-                name: 'name',
-                label: '字段',
-                type: 'input',
-              },
-              {
-                name: 'rules',
-                label: '校验',
-                type: 'select',
-                options: [
-                  {
-                    label: '必填',
-                    value: 'required',
-                  },
-                ],
-              }
+                {
+                    name: 'type',
+                    label: '类型',
+                    type: 'select',
+                    options: [
+                        {
+                            label: '文本',
+                            value: 'input',
+                        },
+                        {
+                            label: '日期',
+                            value: 'date',
+                        },
+                    ],
+                },
+                {
+                    name: 'label',
+                    label: '标题',
+                    type: 'input',
+                },
+                {
+                    name: 'name',
+                    label: '字段',
+                    type: 'input',
+                },
+                {
+                    name: 'rules',
+                    label: '校验',
+                    type: 'select',
+                    options: [
+                        {
+                            label: '必填',
+                            value: 'required',
+                        },
+                    ],
+                }
             ]
         }
-        
+
 
     },
     registerComponent: (name, componentConfig) => set((state) => {
